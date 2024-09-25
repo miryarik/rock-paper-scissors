@@ -1,34 +1,78 @@
 // Rock Paper Scissors
-
+const WIN_SCORE = 5;
+var humanScore = 0;
+var computerScore = 0;
+var humanChoice = "paper";
+var computerChoice = "paper";
 
 // get ui elements - buttons, displays
 //      diplay div for results
-let displayResult = document.querySelector(".display > .result");
-let displayScore = document.querySelector(".display > .score");
+const displayResult = document.querySelector(".display > .result");
+const displayScore = document.querySelector(".display > .score");
+const humanHand = document.querySelector("#humanHand");
+const computerHand = document.querySelector("#computerHand");
 
-//      buttons triggering the game
+// whichever player reaches WIN_SCORE, declare it the winner             
+function checkWinner(humanScore, computerScore) {
+    //      returns :
+    //          1 - Human
+    //          2 - CPU
+    //          0 - Nobody won yet     
+    if (humanScore === WIN_SCORE) {
+        displayResult.textContent = `You win!`;
+        return 1;
+    } 
+    
+    else if (computerScore === WIN_SCORE) {
+        displayResult.textContent = `You lose!`;
+        return 2;
+    }
+    
+    // no winner yet
+    else
+        return 0;
+}
+
+// show hands as per choice
+function showHands(humanChoice, computerChoice) {
+    humanHand.src = `./images/${humanChoice}-human.png`;
+    computerHand.src = `./images/${computerChoice}-cpu.png`;
+}
+
+// buttons to choose
 const rockButton = document.querySelector("#rock");
 const paperButton = document.querySelector("#paper");
 const scissorsButton = document.querySelector("#scissors");
 
-// globally declare scores
-let humanScore;
-let computerScore;
+// function to reset
+function resetIfEnded() {
+    if (checkWinner(humanScore, computerScore) === 1) {
+        humanScore = 0;
+        computerScore = 0;
+        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
+    }
+    else if (checkWinner(humanScore, computerScore) === 2) {
+        humanScore = 0;
+        computerScore = 0;
+        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
+    }
+}
 
 // begin with 0 score and a begin msg on load
 document.addEventListener("DOMContentLoaded", () => {
-    humanScore = 0;
-    computerScore = 0;
     displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    displayResult.textContent = `Click a button to begin`;
+    displayResult.textContent = `${WIN_SCORE} points to win. Click a button to begin.`;
+    showHands(humanChoice, computerChoice);
 })
+
+
 
 // 1 - Generate computer choice
 // 2 - Get choice from user
 // 3 - Play round : compare choices, update score and show result
 
-// 1 - Generate computer choice : 
 
+// 1 - Generate computer choice : 
 function getComputerChoice() {
 // Denote choices as :
 //      0 -> Rock
@@ -36,77 +80,38 @@ function getComputerChoice() {
 //      2 -> Scissors
 
 // generate a num = some random number in (0,1)
-// multiply num by 10
-// reassign num = floor (integral) part of num (round down to nearest integer)
-// get choice = num % 3
+// multiply by 3
+// take integer part
 // map choice mapped from described choices
 // return the mapped value
 
-    let choices = {
+    const choices = {
         0 : "rock",
         1 : "paper",
         2 : "scissors"
     };
 
-    let randomNumber = Math.floor(Math.random() * 10);
-    let randomChoice = choices[randomNumber % 3];
+    const randomNumber = Math.floor(Math.random() * 3);
 
-    return randomChoice;
+    return choices[randomNumber];
 
 }
 
-// 2 - Get choice from user - use events and buttons in ui
-
-// click plays a round with the choice as per button
+// 2 - Get choice from user - use eventListener for buttons in ui
 rockButton.addEventListener("click", () => {
     playRound("rock", getComputerChoice());
-
-    if (checkWinner(humanScore, computerScore) === 1) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    }
-    else if (checkWinner(humanScore, computerScore) === 2) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    }
 });
 
 paperButton.addEventListener("click", () => {
     playRound("paper", getComputerChoice());
-
-    if (checkWinner(humanScore, computerScore) === 1) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-        
-    }
-    else if (checkWinner(humanScore, computerScore) === 2) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    }
 });
 
 scissorsButton.addEventListener("click", () => {    
     playRound("scissors", getComputerChoice());
-
-    if (checkWinner(humanScore, computerScore) === 1) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    }
-    else if (checkWinner(humanScore, computerScore) === 2) {
-        humanScore = 0;
-        computerScore = 0;
-        displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
-    }
 });
 
 
 // 3 Play round
-
 function playRound(humanChoice, computerChoice) {
     
     // there are only 3 ways human can win against computer :
@@ -116,7 +121,9 @@ function playRound(humanChoice, computerChoice) {
     //   Scissors | Paper
 
     // if any of above 3 conditions is true:
-    //      increment humanScore, log You Win! humanChoice beats computerChoice
+    //      increment humanScore, humanChoice beats computerChoice
+
+    showHands(humanChoice, computerChoice);
 
     let conditionOne = (humanChoice === "rock" && computerChoice == "scissors");
     let conditionTwo = (humanChoice === "paper" && computerChoice == "rock");
@@ -129,14 +136,14 @@ function playRound(humanChoice, computerChoice) {
     }
 
     // if not : check if humanChoice === computerChoice:
-    //      log Its a tie between {humanChoice or computerChoice}!
+    //      Its a tie between {humanChoice or computerChoice}!
 
     else if (humanChoice === computerChoice) {
         displayResult.textContent = `Its a tie! You both chose ${humanChoice}`;
     }
 
     // if not : computer has won
-    //  increment computerScore, log You lose! computerChoice beats humanChoice
+    //      increment computerScore, computerChoice beats humanChoice
 
     else {
         computerScore++;
@@ -144,23 +151,10 @@ function playRound(humanChoice, computerChoice) {
         displayScore.textContent = `You ${humanScore} - ${computerScore} CPU`;
     }
 
+    // reset score if someone has won 5 times
+    resetIfEnded();
+
 }
 
-// whichever player reaches score 5, declare it the winner
 
-function checkWinner(humanScore, computerScore) {
-    if (humanScore === 5) {
-        displayResult.textContent = `You win!`;
-        return 1;
-    } 
-    
-    else if (computerScore === 5) {
-        displayResult.textContent = `You lose!`;
-        return 2;
-    }
-    
-    // no winner yet
-    else
-        return 0;
-}
 

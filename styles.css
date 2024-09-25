@@ -4,9 +4,42 @@ body {
 
 h1 {
     text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 30px;
+}
+
+.hands {
+    display: flex;
+    justify-content: center;
+}
+
+.hands > img {
+    padding: 24px;
+}
+
+.display {
+    padding: 16px;
+}
+
+p {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 8px;
+    font-size: larger;
 }
 
 .input-buttons {
-    text-align: center;
+    display: flex;
     margin: auto;
+    justify-content: center;
+    gap: 5%;
+}
+
+button {
+    color: #1e1e1e;
+    border: 2px solid #1e1e1e;
+    font-size: larger;
+    border-radius: 8px;
+    padding: 8px 32px;
+    font-weight: 600;
+    text-wrap: nowrap;
 }

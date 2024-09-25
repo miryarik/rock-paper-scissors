@@ -1,2 +1,2 @@
 # rock-paper-scissors
-A console rock paper scissors.
+Simple Rock Paper Scissors
